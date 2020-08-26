@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   position: absolute;
   top: 50%;
   transform: translate(35%, -50%);
+  color: white;
 `;
 
 const Heading = styled.h1`

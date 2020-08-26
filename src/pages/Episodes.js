@@ -2,6 +2,41 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_EPISODES } from '../schemas/episodes_schema';
 
+import PaginationWrapper from '../components/PaginationWrapper';
+import Wrapper from '../components/Wrapper';
+import Button from '../components/Button';
+
+import styled from 'styled-components';
+
+const EpisodeInfo = styled.div`
+  font-size: 25px;
+  font-weight: 600;
+  color: white;
+  width: 20%;
+  p {
+    margin: 10px;
+  }
+`;
+
+const FeaturedCharacters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  color: lightskyblue;
+  font-weight: 700;
+  font-size: 20px;
+  width: 80%;
+  p {
+    margin: 10px;
+  }
+`;
+
+const WrapperBorder = styled.div`
+  background: #202329;
+  padding: 25px;
+  display: flex;
+  margin-bottom: 10px;
+`;
+
 const Episodes = () => {
   const [page, setPage] = useState(1);
   const setNextPage = () => {
@@ -22,30 +57,36 @@ const Episodes = () => {
 
   return (
     <section>
-      <h1>Episodes</h1>
+      <PaginationWrapper>
+        <Button primary disabled={page === 1} onClick={setPreviousPage}>Previous Page</Button>
+        <Button primary disabled={page === data.episodes.info.pages} onClick={setNextPage}>Next Page</Button>
+      </PaginationWrapper>
       {
          data.episodes.results.map((el) => {
           return (
-            <div key={el.id}>
-              <div style={{display: 'flex', margin: '0 10px'}}>
-                <p>{el.episode}</p>
-                <p>{el.name}</p>
-                <p>{el.air_date}</p>
-              </div>
-              <div style={{display: 'flex'}}>
-                {el.characters.map((char) => {
-                  return (
-                    <p  style={{margin: '0 10px'}}>{char.name}</p>
-                  )
-                })}
-              </div>
-            </div>
+            <Wrapper key={el.id}>
+              <WrapperBorder>
+                <EpisodeInfo>
+                  <p>{el.episode}</p>
+                  <p>{el.name}</p>
+                  <p>{el.air_date}</p>
+                </EpisodeInfo>
+                <FeaturedCharacters>
+                  {el.characters.map((char) => {
+                    return (
+                      <p key={char.name}>{char.name}</p>
+                    )
+                  })}
+                </FeaturedCharacters>
+              </WrapperBorder>
+            </Wrapper>
           )
         })
       }
-
-      <button disabled={page === 1} onClick={setPreviousPage}>Previous Page</button>
-      <button disabled={page === data.episodes.info.pages} onClick={setNextPage}>Next Page</button>
+      <PaginationWrapper>
+        <Button primary disabled={page === 1} onClick={setPreviousPage}>Previous Page</Button>
+        <Button primary disabled={page === data.episodes.info.pages} onClick={setNextPage}>Next Page</Button>
+      </PaginationWrapper>
     </section>
   )
 }
