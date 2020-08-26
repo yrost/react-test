@@ -1,47 +1,44 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
-import Background from './components/Background'
-import Header from './components/Header'
-import Button from './components/Button'
-import img from './images/main-page.png'
+import Header from './components/Header';
+import Home from './pages/Home';
+import Episodes from './pages/Episodes';
+import Characters from './pages/Characters/Characters';
+import Character from './pages/Characters/Character';
 
 import './App.css';
-import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  position: absolute;
-  top: 50%;
-  transform: translate(35%, -50%);
-`;
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-const Heading = styled.h1`
-  font-size: 36px;
-  margin-bottom: 20px;
-`;
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_API_URL,
+  cache: new InMemoryCache()
+});
 
-const Paragraph = styled.p`
-  font-size: 28px;
-  margin-bottom: 20px;
-`;
-
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Background img={img}>
+    <ApolloProvider client={client}>
+      <div className="App">
+      <Router>
         <Header/>
-        <Wrapper>
-          <Heading>Hey, Morty!</Heading>
-          <Paragraph>Wanna enjoy some adventure?</Paragraph>
-          <Button primary big>Follow me</Button>
-        </Wrapper>
-      </Background>
-    </div>
+        <Switch>
+          <Route path="/episodes" component={Episodes}>
+          </Route>
+          <Route path="/characters" component={Characters}>
+          </Route>
+          <Route path="/character/:id" component={Character}>
+          </Route>
+          <Route path="/" component={Home}>
+          </Route>
+        </Switch>
+      </Router>
+      </div>
+    </ApolloProvider>
   );
 }
 
